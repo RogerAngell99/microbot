@@ -25,6 +25,10 @@ public class FlippingCopilotAutomator {
         Rs2GrandExchange.abortOffer(itemName, collectToBank);
     }
 
+    public void collect() {
+        Rs2GrandExchange.collectAll(true);
+    }
+
     public void setQuantity(int quantity) {
         if (offerHandler.isSettingQuantity()) {
             Rs2GrandExchange.setChatboxValue(quantity);

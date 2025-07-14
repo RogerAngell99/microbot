@@ -65,6 +65,9 @@ public class FlippingCopilotScript extends Script {
             case "abort":
                 automator.abort(currentSuggestion.getName(), true); // true to collect to bank
                 break;
+            case "collect":
+                automator.collect();
+                break;
         }
 
         // Remember the suggestion we just acted on so we don't act on it again in the next loop.

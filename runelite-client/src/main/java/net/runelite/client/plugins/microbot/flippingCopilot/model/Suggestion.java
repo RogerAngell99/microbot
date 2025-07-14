@@ -56,6 +56,9 @@ public class Suggestion {
             case "abort":
                 string += "Abort " + name;
                 break;
+            case "collect":
+                string += "Collect " + name;
+                break;
             case "wait":
                 string += "Wait";
                 break;
