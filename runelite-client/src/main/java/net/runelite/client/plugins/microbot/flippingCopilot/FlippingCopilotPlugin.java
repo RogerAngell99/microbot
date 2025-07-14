@@ -1,5 +1,6 @@
 package net.runelite.client.plugins.microbot.flippingCopilot;
 
+import net.runelite.client.plugins.microbot.util.antiban.Rs2AntibanSettings;
 import com.flippingcopilot.controller.*;
 import com.flippingcopilot.model.*;
 import com.flippingcopilot.ui.MainPanel;
@@ -111,6 +112,7 @@ public class FlippingCopilotPlugin extends Plugin {
 
     @Override
     protected void startUp() throws Exception {
+        Rs2AntibanSettings.naturalMouse = true;
         try {
             debugWriter = new FileWriter("debug.txt", true);
             debugWriter.write("FlippingCopilotPlugin: startUp() called\n");
@@ -177,6 +179,7 @@ public class FlippingCopilotPlugin extends Plugin {
 
     @Override
     protected void shutDown() throws Exception {
+        Rs2AntibanSettings.naturalMouse = false;
         try {
             debugWriter.write("FlippingCopilotPlugin: shutDown() called\n");
             debugWriter.close();
