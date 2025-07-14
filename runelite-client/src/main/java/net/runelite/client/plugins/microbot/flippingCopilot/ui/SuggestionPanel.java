@@ -277,19 +277,20 @@ public class SuggestionPanel extends JPanel {
         NumberFormat formatter = NumberFormat.getNumberInstance();
         String suggestionString = "<html><center>";
         suggestionTextContainer.setVisible(false);
+        String innerMessage = "";
 
         switch (suggestion.getType()) {
             case "wait":
-                suggestionString += "Wait <br>";
+                innerMessage = "Wait <br>";
                 break;
             case "abort":
-                suggestionString += "Abort offer for<br><FONT COLOR=white>" + suggestion.getName() + "<br></FONT>";
+                innerMessage = "Abort offer for<br><FONT COLOR=white>" + suggestion.getName() + "<br></FONT>";
                 setItemIcon(suggestion.getItemId());
                 break;
             case "buy":
             case "sell":
                 String capitalisedAction = suggestion.getType().equals("buy") ? "Buy" : "Sell";
-                suggestionString += capitalisedAction +
+                innerMessage = capitalisedAction +
                         " <FONT COLOR=" + highlightedColor + ">" + formatter.format(suggestion.getQuantity()) + "</FONT><br>" +
                         "<FONT COLOR=white>" + suggestion.getName() + "</FONT><br>" +
                         "for <FONT COLOR=" + highlightedColor + ">" + formatter.format(suggestion.getPrice()) + "</FONT> gp<br>";
@@ -300,19 +301,20 @@ public class SuggestionPanel extends JPanel {
                         profit = lastFlip.calculateProfit(suggestion.getItemId(), suggestion.getQuantity(), suggestion.getPrice());
                     }
                     if (profit > 0) {
-                        suggestionString += "<FONT COLOR=green>(+" + formatter.format(profit) + " gp)</FONT>";
+                        innerMessage += "<FONT COLOR=green>(+" + formatter.format(profit) + " gp)</FONT>";
                     } else if (profit < 0) {
-                        suggestionString += "<FONT COLOR=red>(" + formatter.format(profit) + " gp)</FONT>";
+                        innerMessage += "<FONT COLOR=red>(" + formatter.format(profit) + " gp)</FONT>";
                     }
                 }
                 setItemIcon(suggestion.getItemId());
                 break;
             default:
-                suggestionString += "Error processing suggestion<br>";
+                innerMessage = "Error processing suggestion<br>";
         }
-        suggestionString += suggestion.getMessage();
+        innerMessage += suggestion.getMessage();
+        suggestionString += innerMessage;
         suggestionString += "</center><html>";
-        innerSuggestionMessage = "";
+        innerSuggestionMessage = innerMessage;
         if(!suggestion.getType().equals("wait")) {
             setButtonsVisible(true);
         }
@@ -394,6 +396,81 @@ public class SuggestionPanel extends JPanel {
 
     public boolean isCollectItemsSuggested() {
         return suggestionText.isVisible() && "Collect items".equals(innerSuggestionMessage);
+    }
+
+    public String getSuggestedActionType() {
+        if (isCollectItemsSuggested()) {
+            return "collect";
+        } else if (innerSuggestionMessage.contains("Buy")) {
+            return "buy";
+        } else if (innerSuggestionMessage.contains("Sell")) {
+            return "sell";
+        } else if (innerSuggestionMessage.contains("Abort")) {
+            return "abort";
+        } else if (innerSuggestionMessage.contains("Wait")) {
+            return "wait";
+        }
+        return "unknown";
+    }
+
+    public String getSuggestedItemName() {
+        if (innerSuggestionMessage == null) {
+            return null;
+        }
+
+        // For buy/sell
+        String startTag = "<FONT COLOR=white>";
+        String endTag = "</FONT><br>for";
+        int startIndex = innerSuggestionMessage.indexOf(startTag);
+        int endIndex = innerSuggestionMessage.indexOf(endTag);
+
+        if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
+            return innerSuggestionMessage.substring(startIndex + startTag.length(), endIndex).trim();
+        }
+
+        // For abort
+        startTag = "for<br><FONT COLOR=white>";
+        endTag = "<br></FONT>";
+        startIndex = innerSuggestionMessage.indexOf(startTag);
+        endIndex = innerSuggestionMessage.indexOf(endTag);
+
+        if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
+            return innerSuggestionMessage.substring(startIndex + startTag.length(), endIndex).trim();
+        }
+
+        return null;
+    }
+
+    public int getSuggestedQuantity() {
+        // This is a simplified extraction. A more robust solution might parse the HTML or store these values directly.
+        if (innerSuggestionMessage.contains("FONT COLOR=") && innerSuggestionMessage.contains("</FONT><br><FONT COLOR=white>")) {
+            int startIndex = innerSuggestionMessage.indexOf("FONT COLOR=") + "FONT COLOR=".length() + 7; // +7 for color name and ">
+            int endIndex = innerSuggestionMessage.indexOf("</FONT><br><FONT COLOR=white>");
+            if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
+                try {
+                    return Integer.parseInt(innerSuggestionMessage.substring(startIndex, endIndex).replaceAll("[^0-9]", ""));
+                } catch (NumberFormatException e) {
+                    log.warn("Could not parse quantity from: " + innerSuggestionMessage, e);
+                }
+            }
+        }
+        return -1;
+    }
+
+    public int getSuggestedPrice() {
+        // This is a simplified extraction. A more robust solution might parse the HTML or store these values directly.
+        if (innerSuggestionMessage.contains("for <FONT COLOR=") && innerSuggestionMessage.contains("</FONT> gp<br>")) {
+            int startIndex = innerSuggestionMessage.indexOf("for <FONT COLOR=") + "for <FONT COLOR=".length() + 7; // +7 for color name and ">
+            int endIndex = innerSuggestionMessage.indexOf("</FONT> gp<br>");
+            if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
+                try {
+                    return Integer.parseInt(innerSuggestionMessage.substring(startIndex, endIndex).replaceAll("[^0-9]", ""));
+                } catch (NumberFormatException e) {
+                    log.warn("Could not parse price from: " + innerSuggestionMessage, e);
+                }
+            }
+        }
+        return -1;
     }
 
     public void showLoading() {

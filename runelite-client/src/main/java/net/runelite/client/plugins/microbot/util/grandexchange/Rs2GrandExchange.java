@@ -604,7 +604,7 @@ public class Rs2GrandExchange
 	 * @param collectToBank {@code true} to collect items directly to the bank, {@code false} to collect into inventory
 	 * @return {@code true} if the collect action was successfully initiated; {@code false} if the collect button was not found
 	 */
-	public static boolean collectAll(boolean collectToBank)
+		public static boolean collectAll(boolean collectToBank)
 	{
 		if (isAllSlotsEmpty())
 		{

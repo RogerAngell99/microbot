@@ -58,10 +58,7 @@ public class GrandExchangeUncollectedManager {
         lastUncollectedAddedTick = client.getTickCount();
         Map<Integer, Map<Integer, Long>> slotToUncollected = this.uncollected.computeIfAbsent(accountHash, (k) -> new HashMap<>());
         Map<Integer, Long> itemIdToQuantity = slotToUncollected.computeIfAbsent(slot, (k) -> new HashMap<>());
-        if (!itemIdToQuantity.containsKey(itemId)) {
-           // must be a new offer
-           itemIdToQuantity.clear();
-        }
+        
         if(quantity > 0) {
             log.debug("tick {} added {} of item {} to uncollected", client.getTickCount(), itemId, quantity);
             itemIdToQuantity.merge(itemId, quantity, Long::sum);
@@ -73,8 +70,7 @@ public class GrandExchangeUncollectedManager {
     }
 
     public synchronized void ensureSlotClear(Long accountHash, int slot) {
-        Map<Integer, Long> slotUncollected = loadSlotUncollected(accountHash, slot);
-        slotUncollected.remove(slot);
+        clearSlotUncollected(accountHash, slot);
     }
 
     public synchronized void clearSlotUncollected(Long accountHash, int slot) {

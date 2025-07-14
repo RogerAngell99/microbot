@@ -26,7 +26,7 @@ public class FlippingCopilotAutomator {
     }
 
     public void collect() {
-        Rs2GrandExchange.collectAll(true);
+        Rs2GrandExchange.collectAllToInventory();
     }
 
     public void setQuantity(int quantity) {

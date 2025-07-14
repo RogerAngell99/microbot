@@ -168,7 +168,7 @@ public class FlippingCopilotPlugin extends Plugin {
             overlayManager.add(overlay);
         }
 
-        script = new FlippingCopilotScript(automator, suggestionManager);
+        script = new FlippingCopilotScript(automator, suggestionManager, accountStatusManager, mainPanel.copilotPanel.suggestionPanel);
     }
 
     public FlippingCopilotScript getScript() {
