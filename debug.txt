@@ -1,0 +1,5 @@
+FlippingCopilotPlugin: startUp() called
+MainPanel: refresh() called
+MainPanel: isLoggedIn() = false
+MainPanel: renderLoggedOutView() called
+FlippingCopilotPlugin: shutDown() called
