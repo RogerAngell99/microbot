@@ -3,3 +3,15 @@ MainPanel: refresh() called
 MainPanel: isLoggedIn() = false
 MainPanel: renderLoggedOutView() called
 FlippingCopilotPlugin: shutDown() called
+FlippingCopilotPlugin: startUp() called
+MainPanel: refresh() called
+MainPanel: isLoggedIn() = true
+MainPanel: renderLoggedInView() called
+MainPanel: refresh() called
+MainPanel: isLoggedIn() = true
+MainPanel: refresh() called
+MainPanel: isLoggedIn() = true
+MainPanel: onActivate() called
+MainPanel: refresh() called
+MainPanel: isLoggedIn() = true
+FlippingCopilotPlugin: shutDown() called
