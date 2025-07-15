@@ -6,6 +6,8 @@ import com.flippingcopilot.model.Suggestion;
 import com.flippingcopilot.model.SuggestionManager;
 import com.flippingcopilot.ui.SuggestionPanel;
 import net.runelite.client.plugins.microbot.Script;
+import net.runelite.client.plugins.microbot.util.antiban.Rs2Antiban;
+import net.runelite.client.plugins.microbot.util.antiban.enums.Activity;
 
 import javax.inject.Inject;
 import java.util.concurrent.TimeUnit;
@@ -34,6 +36,7 @@ public class FlippingCopilotScript extends Script {
             if (!super.run()) {
                 return;
             }
+            Rs2Antiban.setActivity(Activity.GENERAL_CRAFTING);
             try {
                 loop();
             } catch (Exception e) {
